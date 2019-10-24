@@ -24,7 +24,8 @@
             <strong><%= tweet.user.name %></strong><br />
             <small>@<%= tweet.user.username %></small><br/>
             <p><%= tweet.tweet %></p>
-            <small>posted: <%= time_ago_in_words(tweet.created_at) %> ago</small>
+            <small>tweeted: <%= time_ago_in_words(tweet.created_at) %> ago</small>
+            <p><%= tweet.likes.count %> <%= (tweet.likes.count) == 1 ? 'Like' : 'Likes'%></p>
           </div>
           <% if user_signed_in? && current_user.id == tweet.user_id %>
             <nav class="level">
@@ -40,6 +41,18 @@
                 <% end %>
               </div>
             </nav>
+          <% end %>
+          <% if user_signed_in? %>
+            <% pre_like = tweet.likes.find { |like| like.user_id == current_user.id} %>
+            <% if pre_like %>
+              <%= button_to tweet_like_path(tweet, pre_like), method: :delete do %>
+                <span class="icon"><i class="fa fa-thumbs-down" aria-hidden="true"></i></span>
+              <% end %>
+            <% else %>
+              <%= button_to tweet_likes_path(tweet), method: :post do %>
+                <span class="icon"><i class="fa fa-thumbs-up" aria-hidden="true"></i></span>
+              <% end %>
+            <% end %>
           <% end %>
         </div>
       </article>
